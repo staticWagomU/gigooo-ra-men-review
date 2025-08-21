@@ -7,10 +7,6 @@ pre-commit:
     format:
       glob: "*.{js,jsx,ts,tsx,json,css,md}"
       run: pnpm run format {staged_files}
-
-pre-push:
-  parallel: true
-  commands:
     type-check:
       run: pnpm run type-check
     test:
