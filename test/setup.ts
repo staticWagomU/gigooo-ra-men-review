@@ -38,9 +38,7 @@ Object.defineProperty(window, "matchMedia", {
 if (!document.startViewTransition) {
   (
     document as Document & {
-      startViewTransition?: (callback: () => void) => {
-        finished: Promise<void>;
-      };
+      startViewTransition?: (callback: () => void) => ViewTransition;
     }
   ).startViewTransition = vi.fn((callback) => {
     callback();
@@ -49,7 +47,8 @@ if (!document.startViewTransition) {
       finished: Promise.resolve(),
       updateCallbackDone: Promise.resolve(),
       skipTransition: vi.fn(),
-    };
+      types: new Set<string>(),
+    } as ViewTransition;
   });
 }
 
