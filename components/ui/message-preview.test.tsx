@@ -25,8 +25,9 @@ describe("MessagePreview", () => {
         name: "Slackメッセージ内容",
       });
       expect(messageContent).toHaveTextContent("■店名：ラーメン太郎");
+      expect(messageContent).toHaveTextContent("■場所：東京都渋谷区");
       expect(messageContent).toHaveTextContent(
-        "■場所：東京都渋谷区（https://example.com/ramen-taro）",
+        "■リンク：https://example.com/ramen-taro",
       );
       expect(messageContent).toHaveTextContent("■メニュー名：味噌ラーメン");
       expect(messageContent).toHaveTextContent("■金額：￥850");
@@ -64,7 +65,8 @@ describe("MessagePreview", () => {
         name: "Slackメッセージ内容",
       });
       expect(messageContent).toHaveTextContent("■店名：");
-      expect(messageContent).toHaveTextContent("■場所：（）");
+      expect(messageContent).toHaveTextContent("■場所：");
+      expect(messageContent).toHaveTextContent("■リンク：");
       expect(messageContent).toHaveTextContent("■金額：￥0");
     });
   });

@@ -14,7 +14,8 @@ export function formatStars(rating: number): string {
 
 export function generateSlackMessage(data: ReviewFormData): string {
   return `■店名：${data.storeName}
-■場所：${data.location}（${data.storeLink}）
+■場所：${data.location}
+■リンク：${data.storeLink}
 ■メニュー名：${data.menuName}
 ■金額：￥${data.price}
 ■味：${formatStars(data.tasteRating)}
