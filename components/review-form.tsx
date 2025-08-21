@@ -2,14 +2,14 @@
 
 import { useForm } from "@tanstack/react-form";
 import { safeParse } from "valibot";
-import { reviewFormSchema, type ReviewFormData } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { StarRating } from "@/components/ui/star-rating";
 import { MessagePreview } from "@/components/ui/message-preview";
+import { StarRating } from "@/components/ui/star-rating";
+import { Textarea } from "@/components/ui/textarea";
+import { type ReviewFormData, reviewFormSchema } from "@/lib/validations";
 
 interface ReviewFormProps {
   onSubmit?: (data: ReviewFormData) => void;
@@ -39,19 +39,19 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
     },
   });
 
-  const validateField = (value: any, fieldName: keyof ReviewFormData) => {
+  const validateField = (value: unknown, fieldName: keyof ReviewFormData) => {
     const result = safeParse(reviewFormSchema, {
       ...form.state.values,
       [fieldName]: value,
     });
-    
+
     if (!result.success) {
       const fieldError = result.issues.find(
-        (issue) => issue.path?.[0]?.key === fieldName
+        (issue) => issue.path?.[0]?.key === fieldName,
       );
       return fieldError?.message;
     }
-    
+
     return undefined;
   };
 
@@ -61,7 +61,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold text-center">ラーメンレビュー</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Form Section */}
         <Card>
@@ -70,7 +70,6 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
           </CardHeader>
           <CardContent>
             <form
-              role="form"
               onSubmit={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -199,7 +198,9 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
                       min="1"
                       max="9999"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
                       onBlur={field.handleBlur}
                       placeholder="850"
                     />
@@ -239,7 +240,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
               <form.Field
                 name="atmosphereRating"
                 validators={{
-                  onChange: ({ value }) => validateField(value, "atmosphereRating"),
+                  onChange: ({ value }) =>
+                    validateField(value, "atmosphereRating"),
                 }}
               >
                 {(field) => (
@@ -262,7 +264,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
               <form.Field
                 name="overallRating"
                 validators={{
-                  onChange: ({ value }) => validateField(value, "overallRating"),
+                  onChange: ({ value }) =>
+                    validateField(value, "overallRating"),
                 }}
               >
                 {(field) => (
@@ -309,8 +312,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
               </form.Field>
 
               {/* Submit Button */}
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full"
                 disabled={form.state.isSubmitting}
               >

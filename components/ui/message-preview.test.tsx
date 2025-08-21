@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { MessagePreview } from "./message-preview";
 
@@ -113,7 +113,7 @@ describe("MessagePreview", () => {
     });
 
     it("should handle copy error gracefully", async () => {
-      const mockWriteText = vi
+      const _mockWriteText = vi
         .spyOn(globalThis.navigator.clipboard, "writeText")
         .mockRejectedValue(new Error("Copy failed"));
 
@@ -173,8 +173,11 @@ describe("MessagePreview", () => {
     it("should have preformatted text area for better screen reader support", () => {
       render(<MessagePreview formData={mockFormData} />);
 
-      const preElement = screen.getByRole("region");
-      expect(preElement).toHaveAttribute("aria-label", "Slackメッセージ内容");
+      const sectionElement = screen.getByRole("region");
+      expect(sectionElement).toHaveAttribute(
+        "aria-label",
+        "Slackメッセージ内容",
+      );
     });
   });
 

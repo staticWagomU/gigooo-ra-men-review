@@ -1,4 +1,4 @@
-import { type InferOutput, safeParse } from "valibot";
+import { safeParse } from "valibot";
 import { describe, expect, it } from "vitest";
 import { reviewFormSchema } from "./validations";
 

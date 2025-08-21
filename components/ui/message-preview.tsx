@@ -1,8 +1,7 @@
 import { useState } from "react";
+import { cn, generateSlackMessage } from "@/lib/utils";
 import type { ReviewFormData } from "@/lib/validations";
-import { generateSlackMessage } from "@/lib/utils";
 import { Button } from "./button";
-import { cn } from "@/lib/utils";
 
 interface MessagePreviewProps {
   formData: ReviewFormData;
@@ -25,7 +24,7 @@ function MessagePreview({ formData, className }: MessagePreviewProps) {
       setTimeout(() => {
         setCopyStatus("idle");
       }, 3000);
-    } catch (error) {
+    } catch (_error) {
       setCopyStatus("error");
 
       // Reset status after 3 seconds
@@ -73,15 +72,14 @@ function MessagePreview({ formData, className }: MessagePreviewProps) {
         </Button>
       </div>
 
-      <div
-        role="region"
+      <section
         aria-label="Slackメッセージ内容"
         className="bg-muted p-4 rounded-md border"
       >
         <pre className="font-mono text-sm whitespace-pre-wrap break-words">
           {message}
         </pre>
-      </div>
+      </section>
     </div>
   );
 }

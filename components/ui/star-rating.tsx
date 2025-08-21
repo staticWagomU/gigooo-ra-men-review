@@ -35,11 +35,10 @@ function StarRating({
   };
 
   return (
-    <div
-      role="group"
+    <fieldset
       aria-label={`評価: ${value}/5`}
       className={cn(
-        "flex items-center gap-1",
+        "flex items-center gap-1 border-0 p-0",
         disabled && "opacity-50",
         className,
       )}
@@ -67,7 +66,7 @@ function StarRating({
           </button>
         );
       })}
-    </div>
+    </fieldset>
   );
 }
 

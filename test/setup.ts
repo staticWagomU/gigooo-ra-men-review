@@ -36,7 +36,13 @@ Object.defineProperty(window, "matchMedia", {
 
 // View Transitions APIのモック
 if (!document.startViewTransition) {
-  (document as any).startViewTransition = vi.fn((callback) => {
+  (
+    document as Document & {
+      startViewTransition?: (callback: () => void) => {
+        finished: Promise<void>;
+      };
+    }
+  ).startViewTransition = vi.fn((callback) => {
     callback();
     return {
       ready: Promise.resolve(),
