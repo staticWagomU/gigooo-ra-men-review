@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "@tanstack/react-form";
+import { useForm, useStore } from "@tanstack/react-form";
 import { safeParse } from "valibot";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,8 +55,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
     return undefined;
   };
 
-  // Get current form values for preview
-  const formValues = form.state.values;
+  // Get current form values for preview with subscription
+  const formValues = useStore(form.store, (state) => state.values);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
