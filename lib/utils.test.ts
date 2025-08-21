@@ -38,7 +38,8 @@ describe("generateSlackMessage", () => {
     };
 
     const expected = `■店名：ラーメン太郎
-■場所：東京都渋谷区（https://example.com/ramen-taro）
+■場所：東京都渋谷区
+■リンク：https://example.com/ramen-taro
 ■メニュー名：味噌ラーメン
 ■金額：￥850
 ■味：★★★★☆
@@ -63,7 +64,8 @@ describe("generateSlackMessage", () => {
     };
 
     const expected = `■店名：らーめん次郎
-■場所：新宿区（https://example.com/jiro）
+■場所：新宿区
+■リンク：https://example.com/jiro
 ■メニュー名：豚骨ラーメン
 ■金額：￥1200
 ■味：★★★★★
@@ -88,7 +90,8 @@ describe("generateSlackMessage", () => {
     };
 
     const expected = `■店名：A
-■場所：B（https://c.com）
+■場所：B
+■リンク：https://c.com
 ■メニュー名：D
 ■金額：￥1
 ■味：★☆☆☆☆
