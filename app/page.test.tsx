@@ -16,9 +16,6 @@ describe("Home Page", () => {
       expect(screen.getByLabelText("メニュー名")).toBeInTheDocument();
       expect(screen.getByLabelText("金額（円）")).toBeInTheDocument();
       expect(screen.getByLabelText("レビュー")).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "レビューを投稿" }),
-      ).toBeInTheDocument();
     });
 
     it("should render message preview", () => {

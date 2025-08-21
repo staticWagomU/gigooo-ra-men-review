@@ -2,7 +2,6 @@
 
 import { useForm, useStore } from "@tanstack/react-form";
 import { safeParse } from "valibot";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -310,15 +309,6 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
                   </div>
                 )}
               </form.Field>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={form.state.isSubmitting}
-              >
-                {form.state.isSubmitting ? "投稿中..." : "レビューを投稿"}
-              </Button>
             </form>
           </CardContent>
         </Card>

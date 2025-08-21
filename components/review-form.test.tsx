@@ -26,15 +26,6 @@ describe("ReviewForm", () => {
       );
     });
 
-    it("should render submit button", () => {
-      render(<ReviewForm />);
-
-      const submitButton = screen.getByRole("button", {
-        name: "レビューを投稿",
-      });
-      expect(submitButton).toBeInTheDocument();
-    });
-
     it("should render message preview section", () => {
       render(<ReviewForm />);
 
@@ -51,7 +42,7 @@ describe("ReviewForm", () => {
           (button) => button.textContent === "★" || button.textContent === "☆",
         );
 
-      // 3 rating components × 5 stars each = 15 star buttons (plus 1 submit button = 16 total)
+      // 3 rating components × 5 stars each = 15 star buttons
       expect(starButtons).toHaveLength(15);
     });
   });
