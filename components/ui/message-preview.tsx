@@ -13,21 +13,21 @@ type CopyStatus = "idle" | "success" | "error";
 
 function MessagePreview({ formData, className }: MessagePreviewProps) {
   const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
-  
+
   const message = generateSlackMessage(formData);
-  
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(message);
       setCopyStatus("success");
-      
+
       // Reset status after 3 seconds
       setTimeout(() => {
         setCopyStatus("idle");
       }, 3000);
     } catch (error) {
       setCopyStatus("error");
-      
+
       // Reset status after 3 seconds
       setTimeout(() => {
         setCopyStatus("idle");
@@ -72,7 +72,7 @@ function MessagePreview({ formData, className }: MessagePreviewProps) {
           {getButtonText()}
         </Button>
       </div>
-      
+
       <div
         role="region"
         aria-label="Slackメッセージ内容"
