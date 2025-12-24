@@ -12,6 +12,16 @@ export function formatStars(rating: number): string {
   return filledStars + emptyStars;
 }
 
+export function stripMarkdownLinks(markdown: string): string {
+  return markdown
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, "") // Remove image links ![alt](url)
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // Remove markdown links [text](url) -> text
+    .replace(/https?:\/\/[^\s)]+/g, "") // Remove plain URLs
+    .replace(/[ \t]+$/gm, "") // Trim trailing whitespace from each line
+    .replace(/[ \t]{2,}/g, " ") // Normalize consecutive spaces to single space
+    .replace(/\n{3,}/g, "\n\n"); // Normalize 3+ newlines to 2 newlines
+}
+
 export function generateSlackMessage(data: ReviewFormData): string {
   return `■店名：${data.storeName}
 ■場所：${data.location}

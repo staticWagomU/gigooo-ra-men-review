@@ -1,13 +1,17 @@
 "use client";
 
 import { useForm, useStore } from "@tanstack/react-form";
+import { useState } from "react";
 import { safeParse } from "valibot";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MessagePreview } from "@/components/ui/message-preview";
 import { StarRating } from "@/components/ui/star-rating";
 import { Textarea } from "@/components/ui/textarea";
+import { parseUrlAndExtractShopInfo } from "@/lib/actions";
+import { fetchJinaReader } from "@/lib/jina-reader";
 import { type ReviewFormData, reviewFormSchema } from "@/lib/validations";
 
 interface ReviewFormProps {
@@ -15,6 +19,10 @@ interface ReviewFormProps {
 }
 
 function ReviewForm({ onSubmit }: ReviewFormProps) {
+  const [urlError, setUrlError] = useState<string | null>(null);
+  const [fallbackMessage, setFallbackMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm({
     defaultValues: {
       storeName: "",
@@ -57,6 +65,34 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
   // Get current form values for preview with subscription
   const formValues = useStore(form.store, (state) => state.values);
 
+  const handleParseUrl = async () => {
+    const storeLink = form.getFieldValue("storeLink");
+    if (!storeLink) return;
+
+    setUrlError(null);
+    setFallbackMessage(null);
+    setIsLoading(true);
+
+    try {
+      const markdown = await fetchJinaReader(storeLink);
+      const shopInfo = await parseUrlAndExtractShopInfo(markdown);
+
+      if (!shopInfo.shopName) {
+        setFallbackMessage(
+          "店舗情報を自動取得できませんでした。手動で入力してください。",
+        );
+        return;
+      }
+
+      form.setFieldValue("storeName", shopInfo.shopName ?? "");
+      form.setFieldValue("location", shopInfo.address ?? "");
+    } catch {
+      setUrlError("URLの解析に失敗しました。URLを確認してください。");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold text-center">ラーメンレビュー</h1>
@@ -76,6 +112,51 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
               }}
               className="space-y-6"
             >
+              {/* Store Link */}
+              <form.Field
+                name="storeLink"
+                validators={{
+                  onChange: ({ value }) => validateField(value, "storeLink"),
+                }}
+              >
+                {(field) => (
+                  <div className="space-y-2">
+                    <Label htmlFor="storeLink">店舗リンク</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="storeLink"
+                        type="url"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        placeholder="食べログなどのURLを入力"
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleParseUrl}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? "解析中..." : "解析"}
+                      </Button>
+                    </div>
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors[0]}
+                      </p>
+                    )}
+                    {urlError && (
+                      <p className="text-sm text-destructive">{urlError}</p>
+                    )}
+                    {fallbackMessage && (
+                      <p className="text-sm text-muted-foreground">
+                        {fallbackMessage}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </form.Field>
+
               {/* Store Name */}
               <form.Field
                 name="storeName"
@@ -118,33 +199,6 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
                       onChange={(e) => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
                       placeholder="場所を入力してください"
-                    />
-                    {field.state.meta.errors.length > 0 && (
-                      <p className="text-sm text-destructive">
-                        {field.state.meta.errors[0]}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </form.Field>
-
-              {/* Store Link */}
-              <form.Field
-                name="storeLink"
-                validators={{
-                  onChange: ({ value }) => validateField(value, "storeLink"),
-                }}
-              >
-                {(field) => (
-                  <div className="space-y-2">
-                    <Label htmlFor="storeLink">店舗リンク</Label>
-                    <Input
-                      id="storeLink"
-                      type="url"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                      placeholder="https://example.com"
                     />
                     {field.state.meta.errors.length > 0 && (
                       <p className="text-sm text-destructive">
