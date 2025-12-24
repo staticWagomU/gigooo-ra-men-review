@@ -126,7 +126,7 @@ sprint:
   number: 1
   pbi: PBI-001
   status: in_progress
-  subtasks_completed: 4
+  subtasks_completed: 5
   subtasks_total: 6
   impediments: 0
 ```
@@ -262,8 +262,14 @@ sprint:
     - test: "Jina Reader API がエラーを返した場合はエラーメッセージが表示される"
       implementation: "APIエラー時にユーザーフレンドリーなエラーメッセージを表示する"
       type: behavioral
-      status: pending
-      commits: []
+      status: completed
+      commits:
+        - phase: red
+          sha: 9347faa
+          message: "test: Jina Reader APIエラー時のエラーメッセージ表示をテスト"
+        - phase: green
+          sha: ff71858
+          message: "feat: URL解析エラー時のエラーメッセージ表示を実装"
 
     - test: "AI が情報を抽出できなかった場合は手動入力に切り替わる"
       implementation: "抽出失敗時にフォールバックUIを表示し、手動入力を促す"
