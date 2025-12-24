@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
 import { safeParse } from "valibot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +16,8 @@ interface ReviewFormProps {
 }
 
 function ReviewForm({ onSubmit }: ReviewFormProps) {
+  const [urlInput, setUrlInput] = useState("");
+
   const form = useForm({
     defaultValues: {
       storeName: "",
@@ -76,6 +79,18 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
               }}
               className="space-y-6"
             >
+              {/* URL解析 */}
+              <div className="space-y-2">
+                <Label htmlFor="urlInput">URL解析</Label>
+                <Input
+                  id="urlInput"
+                  type="url"
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  placeholder="食べログなどのURLを入力"
+                />
+              </div>
+
               {/* Store Name */}
               <form.Field
                 name="storeName"
