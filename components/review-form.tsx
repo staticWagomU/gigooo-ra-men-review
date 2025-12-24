@@ -22,6 +22,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
   const [urlInput, setUrlInput] = useState("");
   const [urlError, setUrlError] = useState<string | null>(null);
   const [fallbackMessage, setFallbackMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -70,6 +71,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
 
     setUrlError(null);
     setFallbackMessage(null);
+    setIsLoading(true);
 
     try {
       const markdown = await fetchJinaReader(urlInput);
@@ -86,6 +88,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
       form.setFieldValue("location", shopInfo.address);
     } catch {
       setUrlError("URLの解析に失敗しました。URLを確認してください。");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,8 +123,12 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
                     onChange={(e) => setUrlInput(e.target.value)}
                     placeholder="食べログなどのURLを入力"
                   />
-                  <Button type="button" onClick={handleParseUrl}>
-                    解析
+                  <Button
+                    type="button"
+                    onClick={handleParseUrl}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "解析中..." : "解析"}
                   </Button>
                 </div>
                 {urlError && (

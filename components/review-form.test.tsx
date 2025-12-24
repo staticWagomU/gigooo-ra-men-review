@@ -1,6 +1,23 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { ReviewForm } from "./review-form";
+
+// モック設定
+vi.mock("@/lib/jina-reader", () => ({
+  fetchJinaReader: vi.fn(),
+}));
+
+vi.mock("@/lib/shop-info-extractor", () => ({
+  extractShopInfo: vi.fn(),
+}));
+
+import { fetchJinaReader } from "@/lib/jina-reader";
 
 describe("ReviewForm", () => {
   describe("rendering", () => {
@@ -98,6 +115,39 @@ describe("ReviewForm", () => {
 
       const subHeading = screen.getByRole("heading", { level: 3 });
       expect(subHeading).toHaveTextContent("Slackメッセージプレビュー");
+    });
+  });
+
+  describe("URL parsing loading state", () => {
+    it("should show loading state when parsing URL", async () => {
+      // API呼び出しを遅延させてローディング状態を確認
+      vi.mocked(fetchJinaReader).mockImplementation(
+        () =>
+          new Promise((resolve) => setTimeout(() => resolve("# Shop"), 100)),
+      );
+
+      render(<ReviewForm />);
+
+      const urlInput = screen.getByPlaceholderText("食べログなどのURLを入力");
+      const parseButton = screen.getByRole("button", { name: "解析" });
+
+      await act(async () => {
+        fireEvent.change(urlInput, {
+          target: { value: "https://tabelog.com/test" },
+        });
+      });
+
+      // ボタンをクリック
+      await act(async () => {
+        fireEvent.click(parseButton);
+      });
+
+      // ローディング中はボタンが無効化され、「解析中...」が表示される
+      await waitFor(() => {
+        expect(
+          screen.getByRole("button", { name: "解析中..." }),
+        ).toBeDisabled();
+      });
     });
   });
 });
