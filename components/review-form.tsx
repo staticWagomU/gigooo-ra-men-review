@@ -86,8 +86,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
         return;
       }
 
-      form.setFieldValue("storeName", shopInfo.shopName);
-      form.setFieldValue("location", shopInfo.address);
+      form.setFieldValue("storeName", shopInfo.shopName ?? "");
+      form.setFieldValue("location", shopInfo.address ?? "");
     } catch {
       setUrlError("URLの解析に失敗しました。URLを確認してください。");
     } finally {

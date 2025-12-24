@@ -24,7 +24,6 @@ describe("URL解析による自動入力", () => {
     vi.mocked(extractShopInfo).mockResolvedValue({
       shopName: "麺屋 一燈",
       address: "東京都新宿区西新宿1-2-3",
-      phoneNumber: "03-1234-5678",
     });
 
     render(<ReviewForm />);

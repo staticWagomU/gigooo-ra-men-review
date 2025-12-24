@@ -14,7 +14,6 @@ describe("extractShopInfo", () => {
     const mockShopInfo = {
       shopName: "麺屋 一燈",
       address: "東京都新宿区西新宿1-2-3",
-      phoneNumber: "03-1234-5678",
     };
 
     vi.mocked(generateText).mockResolvedValue({
@@ -26,8 +25,6 @@ describe("extractShopInfo", () => {
 
 東京都新宿区西新宿1-2-3
 
-電話: 03-1234-5678
-
 営業時間: 11:00〜21:00
     `.trim();
 
@@ -36,6 +33,21 @@ describe("extractShopInfo", () => {
     // AI APIが呼び出されていることを確認
     expect(generateText).toHaveBeenCalledTimes(1);
     expect(result).toEqual(mockShopInfo);
+  });
+
+  it("should handle partial extraction (only shopName)", async () => {
+    const mockShopInfo = {
+      shopName: "ラーメン太郎",
+    };
+
+    vi.mocked(generateText).mockResolvedValue({
+      output: mockShopInfo,
+    } as unknown as Awaited<ReturnType<typeof generateText>>);
+
+    const result = await extractShopInfo("# ラーメン太郎");
+
+    expect(result.shopName).toBe("ラーメン太郎");
+    expect(result.address).toBeUndefined();
   });
 
   it("should return empty ShopInfo when AI API throws an error", async () => {

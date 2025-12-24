@@ -68,9 +68,8 @@ async function main() {
     console.log("=".repeat(40));
     console.log("抽出結果:");
     console.log("=".repeat(40));
-    console.log(`店名:     ${shopInfo.shopName || "(なし)"}`);
-    console.log(`住所:     ${shopInfo.address || "(なし)"}`);
-    console.log(`電話番号: ${shopInfo.phoneNumber || "(なし)"}`);
+    console.log(`店名: ${shopInfo.shopName ?? "(なし)"}`);
+    console.log(`住所: ${shopInfo.address ?? "(なし)"}`);
     console.log("");
     console.log("JSON:");
     console.log(JSON.stringify(shopInfo, null, 2));

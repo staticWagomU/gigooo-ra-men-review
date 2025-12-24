@@ -2,23 +2,14 @@ import { openai } from "@ai-sdk/openai";
 import { generateText, Output } from "ai";
 import { z } from "zod";
 
-export type ShopInfo = {
-  shopName: string;
-  address: string;
-  phoneNumber: string;
-};
-
-export const emptyShopInfo: ShopInfo = {
-  shopName: "",
-  address: "",
-  phoneNumber: "",
-};
-
 const shopInfoSchema = z.object({
-  shopName: z.string(),
-  address: z.string(),
-  phoneNumber: z.string(),
+  shopName: z.string().optional(),
+  address: z.string().optional(),
 });
+
+export type ShopInfo = z.infer<typeof shopInfoSchema>;
+
+export const emptyShopInfo: ShopInfo = {};
 
 export async function extractShopInfo(markdown: string): Promise<ShopInfo> {
   try {

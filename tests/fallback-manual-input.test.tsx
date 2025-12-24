@@ -21,12 +21,8 @@ describe("AI抽出失敗時の手動入力フォールバック", () => {
 
     // Jina ReaderはMarkdownを正常に取得
     vi.mocked(fetchJinaReader).mockResolvedValue("# Some page content");
-    // AIは店舗情報を抽出できない（空の情報を返す）
-    vi.mocked(extractShopInfo).mockResolvedValue({
-      shopName: "",
-      address: "",
-      phoneNumber: "",
-    });
+    // AIは店舗情報を抽出できない（空のオブジェクトを返す）
+    vi.mocked(extractShopInfo).mockResolvedValue({});
 
     render(<ReviewForm />);
 
