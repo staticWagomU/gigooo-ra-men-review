@@ -35,4 +35,18 @@ describe("extractShopInfoWithAI", () => {
     expect(generateObject).toHaveBeenCalledTimes(1);
     expect(result).toEqual(mockShopInfo);
   });
+
+  it("should return empty ShopInfo when AI API throws an error", async () => {
+    vi.mocked(generateObject).mockRejectedValue(new Error("API rate limit exceeded"));
+
+    const markdown = "# Some shop content";
+
+    const result = await extractShopInfoWithAI(markdown);
+
+    expect(result).toEqual({
+      shopName: "",
+      address: "",
+      phoneNumber: "",
+    });
+  });
 });
