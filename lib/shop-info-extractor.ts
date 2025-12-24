@@ -23,7 +23,7 @@ const shopInfoSchema = z.object({
 export async function extractShopInfo(markdown: string): Promise<ShopInfo> {
   try {
     const { object } = await generateObject({
-      model: openai("gpt-4o-mini"),
+      model: openai("gpt-5-mini"),
       schema: shopInfoSchema,
       prompt: `以下のMarkdownから店舗情報を抽出してください。
 
