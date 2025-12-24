@@ -258,8 +258,14 @@ sprint:
     - test: "AI APIがエラーを返した場合は空のShopInfoを返す"
       implementation: "API呼び出し失敗時にフォールバックとして空のShopInfoを返すエラーハンドリング"
       type: behavioral
-      status: red
-      commits: []
+      status: green
+      commits:
+        - phase: red
+          sha: 5682d20
+          message: "test: AI APIエラー時のフォールバック動作を検証"
+        - phase: green
+          sha: 79cf7a7
+          message: "feat: AI APIエラー時に空のShopInfoを返すフォールバック処理"
 
   notes: |
     Sprint 2 開始。PBI-002「AI APIで店舗情報を抽出する」を実装。
