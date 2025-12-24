@@ -126,7 +126,7 @@ sprint:
   number: 2
   pbi: PBI-002
   status: in_progress
-  subtasks_completed: 0
+  subtasks_completed: 1
   subtasks_total: 3
   impediments: 0
 ```
@@ -239,8 +239,14 @@ sprint:
     - test: "extractShopInfoがAI APIを呼び出して店舗情報を抽出できる"
       implementation: "extractShopInfo関数をAI API呼び出しに置き換え、Markdownから店舗情報JSONを抽出する"
       type: behavioral
-      status: pending
-      commits: []
+      status: completed
+      commits:
+        - phase: red
+          sha: 4ee5eed
+          message: "test: AI API呼び出しで店舗情報を抽出するテスト"
+        - phase: green
+          sha: e169003
+          message: "feat: Vercel AI SDKでAIによる店舗情報抽出を実装"
 
     - test: "AI APIのレスポンスがShopInfo型に正しくパースされる"
       implementation: "AIレスポンスをバリデーションしてShopInfo型に変換する関数を実装"
