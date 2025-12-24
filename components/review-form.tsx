@@ -20,6 +20,7 @@ interface ReviewFormProps {
 
 function ReviewForm({ onSubmit }: ReviewFormProps) {
   const [urlInput, setUrlInput] = useState("");
+  const [urlError, setUrlError] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
@@ -66,11 +67,17 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
   const handleParseUrl = async () => {
     if (!urlInput) return;
 
-    const markdown = await fetchJinaReader(urlInput);
-    const shopInfo = await extractShopInfo(markdown);
+    setUrlError(null);
 
-    form.setFieldValue("storeName", shopInfo.shopName);
-    form.setFieldValue("location", shopInfo.address);
+    try {
+      const markdown = await fetchJinaReader(urlInput);
+      const shopInfo = await extractShopInfo(markdown);
+
+      form.setFieldValue("storeName", shopInfo.shopName);
+      form.setFieldValue("location", shopInfo.address);
+    } catch {
+      setUrlError("URLの解析に失敗しました。URLを確認してください。");
+    }
   };
 
   return (
@@ -107,6 +114,9 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
                     解析
                   </Button>
                 </div>
+                {urlError && (
+                  <p className="text-sm text-destructive">{urlError}</p>
+                )}
               </div>
 
               {/* Store Name */}
