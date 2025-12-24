@@ -4,7 +4,7 @@ export type ShopInfo = {
   phoneNumber: string;
 };
 
-export async function extractShopInfo(markdown: string): Promise<ShopInfo> {
+export async function extractShopInfo(_markdown: string): Promise<ShopInfo> {
   // Fake it: テストを通すための最小限の実装
   // 後のイテレーションでAI APIを使った実装に置き換える
   return {

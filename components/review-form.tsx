@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
+import { useState } from "react";
 import { safeParse } from "valibot";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { fetchJinaReader } from "@/lib/jina-reader";
-import { extractShopInfo } from "@/lib/shop-info-extractor";
 import { MessagePreview } from "@/components/ui/message-preview";
 import { StarRating } from "@/components/ui/star-rating";
 import { Textarea } from "@/components/ui/textarea";
+import { fetchJinaReader } from "@/lib/jina-reader";
+import { extractShopInfo } from "@/lib/shop-info-extractor";
 import { type ReviewFormData, reviewFormSchema } from "@/lib/validations";
 
 interface ReviewFormProps {
