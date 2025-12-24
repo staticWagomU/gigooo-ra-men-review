@@ -126,7 +126,7 @@ sprint:
   number: 1
   pbi: PBI-001
   status: in_progress
-  subtasks_completed: 5
+  subtasks_completed: 6
   subtasks_total: 6
   impediments: 0
 ```
@@ -274,8 +274,14 @@ sprint:
     - test: "AI が情報を抽出できなかった場合は手動入力に切り替わる"
       implementation: "抽出失敗時にフォールバックUIを表示し、手動入力を促す"
       type: behavioral
-      status: pending
-      commits: []
+      status: completed
+      commits:
+        - phase: red
+          sha: 69fa32f
+          message: "test: AI抽出失敗時の手動入力フォールバックをテスト"
+        - phase: green
+          sha: 75cbcaf
+          message: "feat: AI抽出失敗時のフォールバックメッセージを実装"
   # TDD Subtask Format - Each subtask tracks commits through Red-Green-Refactor:
   #
   # - test: "User model has email and hashed_password fields"
