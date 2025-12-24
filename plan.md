@@ -123,11 +123,11 @@ Sprint Cycle:
 
 ```yaml
 sprint:
-  number: 1
-  pbi: PBI-001
-  status: done
-  subtasks_completed: 6
-  subtasks_total: 6
+  number: 2
+  pbi: PBI-002
+  status: in_progress
+  subtasks_completed: 0
+  subtasks_total: 3
   impediments: 0
 ```
 
@@ -180,6 +180,31 @@ product_backlog:
       - criterion: "AI が情報を抽出できなかった場合は手動入力に切り替わる"
         verification: "pnpm test -- --run tests/fallback-manual-input.test.tsx"
     dependencies: []
+    status: completed
+
+  - id: PBI-002
+    story:
+      role: "ラーメン愛好家"
+      capability: "URLから取得したMarkdownをAI APIで解析し、実際の店舗情報を抽出する"
+      benefit: "手動入力に頼らず、様々なサイトから正確に店舗情報を取得できる"
+    technical_approach:
+      summary: |
+        1. extractShopInfo関数をAI API（OpenAI/Anthropic）呼び出しに置き換え
+        2. Markdownを入力としてJSONスキーマに従った店舗情報を抽出
+        3. AIレスポンスのバリデーションを実装
+        4. エラーハンドリング（API失敗、パース失敗など）
+      dependencies:
+        - "AI API (OpenAI または Anthropic)"
+        - "環境変数でAPIキー管理"
+    acceptance_criteria:
+      - criterion: "extractShopInfoがAI APIを呼び出して店舗情報を抽出できる"
+        verification: "pnpm test -- --run tests/shop-info-extractor-ai.test.ts"
+      - criterion: "AI APIのレスポンスがShopInfo型に正しくパースされる"
+        verification: "pnpm test -- --run tests/shop-info-parser.test.ts"
+      - criterion: "AI APIがエラーを返した場合は空のShopInfoを返す"
+        verification: "pnpm test -- --run tests/shop-info-extractor-error.test.ts"
+    dependencies:
+      - "PBI-001 (完了)"
     status: ready
 ```
 
@@ -205,83 +230,35 @@ definition_of_ready:
 
 ```yaml
 sprint:
-  number: 1
-  pbi_id: PBI-001
-  story: "ラーメン愛好家として、食べログなどのURLを入力して、店舗の基本情報（住所、電話番号など）を自動で取得したい"
-  status: done
+  number: 2
+  pbi_id: PBI-002
+  story: "ラーメン愛好家として、URLから取得したMarkdownをAI APIで解析し、実際の店舗情報を抽出したい"
+  status: in_progress
 
   subtasks:
-    - test: "URL入力フィールドにURLを入力できる"
-      implementation: "ReviewFormにURL入力フィールドを追加し、入力状態を管理する"
+    - test: "extractShopInfoがAI APIを呼び出して店舗情報を抽出できる"
+      implementation: "extractShopInfo関数をAI API呼び出しに置き換え、Markdownから店舗情報JSONを抽出する"
       type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: eeff615
-          message: "test: URL解析フィールドの表示をテスト"
-        - phase: green
-          sha: b7e6044
-          message: "feat: URL解析フィールドを追加"
+      status: pending
+      commits: []
 
-    - test: "Jina Reader API で URL から Markdown を取得できる"
-      implementation: "fetchJinaReader関数を作成し、r.jina.ai APIを呼び出してMarkdownを返す"
+    - test: "AI APIのレスポンスがShopInfo型に正しくパースされる"
+      implementation: "AIレスポンスをバリデーションしてShopInfo型に変換する関数を実装"
       type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: 2f00453
-          message: "test: Jina Reader APIからMarkdown取得をテスト"
-        - phase: green
-          sha: 8ddd50f
-          message: "feat: Jina Reader APIでURL→Markdown変換を実装"
+      status: pending
+      commits: []
 
-    - test: "Markdown から AI が店舗情報（店名、住所、電話番号）を抽出できる"
-      implementation: "extractShopInfo関数を作成し、AIに店舗情報抽出を依頼する"
+    - test: "AI APIがエラーを返した場合は空のShopInfoを返す"
+      implementation: "API呼び出し失敗時にフォールバックとして空のShopInfoを返すエラーハンドリング"
       type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: 2766933
-          message: "test: Markdownから店舗情報を抽出する機能をテスト"
-        - phase: green
-          sha: f6a0e7c
-          message: "feat: 店舗情報抽出機能の基本実装を追加"
+      status: pending
+      commits: []
 
-    - test: "解析された情報がレビューフォームに自動入力される"
-      implementation: "URL解析後に店名、住所をフォームに自動入力する"
-      type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: a2a96b1
-          message: "test: URL解析後のフォーム自動入力をテスト"
-        - phase: green
-          sha: f8f55b0
-          message: "feat: URL解析による店舗情報の自動入力を実装"
+  notes: |
+    Sprint 2 開始。PBI-002「AI APIで店舗情報を抽出する」を実装。
+    Sprint 1でスタブ実装したextractShopInfoを実際のAI API呼び出しに置き換える。
+    TDDでRed-Green-Refactorサイクルを回す。
 
-    - test: "Jina Reader API がエラーを返した場合はエラーメッセージが表示される"
-      implementation: "APIエラー時にユーザーフレンドリーなエラーメッセージを表示する"
-      type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: 9347faa
-          message: "test: Jina Reader APIエラー時のエラーメッセージ表示をテスト"
-        - phase: green
-          sha: ff71858
-          message: "feat: URL解析エラー時のエラーメッセージ表示を実装"
-
-    - test: "AI が情報を抽出できなかった場合は手動入力に切り替わる"
-      implementation: "抽出失敗時にフォールバックUIを表示し、手動入力を促す"
-      type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: 69fa32f
-          message: "test: AI抽出失敗時の手動入力フォールバックをテスト"
-        - phase: green
-          sha: 75cbcaf
-          message: "feat: AI抽出失敗時のフォールバックメッセージを実装"
   # TDD Subtask Format - Each subtask tracks commits through Red-Green-Refactor:
   #
   # - test: "User model has email and hashed_password fields"
