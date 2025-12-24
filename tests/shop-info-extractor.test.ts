@@ -2,10 +2,11 @@ import { describe, expect, it, vi } from "vitest";
 
 // AI SDKをモック
 vi.mock("ai", () => ({
-  generateObject: vi.fn(),
+  Output: { object: vi.fn() },
+  generateText: vi.fn(),
 }));
 
-import { generateObject } from "ai";
+import { generateText } from "ai";
 import { emptyShopInfo, extractShopInfo } from "@/lib/shop-info-extractor";
 
 describe("extractShopInfo", () => {
@@ -16,9 +17,9 @@ describe("extractShopInfo", () => {
       phoneNumber: "03-1234-5678",
     };
 
-    vi.mocked(generateObject).mockResolvedValue({
-      object: mockShopInfo,
-    } as Awaited<ReturnType<typeof generateObject>>);
+    vi.mocked(generateText).mockResolvedValue({
+      output: mockShopInfo,
+    } as unknown as Awaited<ReturnType<typeof generateText>>);
 
     const markdown = `
 # 麺屋 一燈
@@ -33,12 +34,12 @@ describe("extractShopInfo", () => {
     const result = await extractShopInfo(markdown);
 
     // AI APIが呼び出されていることを確認
-    expect(generateObject).toHaveBeenCalledTimes(1);
+    expect(generateText).toHaveBeenCalledTimes(1);
     expect(result).toEqual(mockShopInfo);
   });
 
   it("should return empty ShopInfo when AI API throws an error", async () => {
-    vi.mocked(generateObject).mockRejectedValue(
+    vi.mocked(generateText).mockRejectedValue(
       new Error("API rate limit exceeded"),
     );
 

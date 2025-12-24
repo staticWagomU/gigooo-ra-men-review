@@ -1,5 +1,5 @@
 import { openai } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateText, Output } from "ai";
 import { z } from "zod";
 
 export type ShopInfo = {
@@ -22,15 +22,15 @@ const shopInfoSchema = z.object({
 
 export async function extractShopInfo(markdown: string): Promise<ShopInfo> {
   try {
-    const { object } = await generateObject({
+    const result = await generateText({
       model: openai("gpt-5-mini"),
-      schema: shopInfoSchema,
+      output: Output.object({ schema: shopInfoSchema }),
       prompt: `以下のMarkdownから店舗情報を抽出してください。
 
 ${markdown}`,
     });
 
-    return object;
+    return result.output ?? emptyShopInfo;
   } catch {
     return emptyShopInfo;
   }
