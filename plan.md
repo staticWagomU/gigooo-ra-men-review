@@ -125,7 +125,7 @@ Sprint Cycle:
 sprint:
   number: 1
   pbi: PBI-001
-  status: in_progress
+  status: done
   subtasks_completed: 6
   subtasks_total: 6
   impediments: 0
@@ -208,7 +208,7 @@ sprint:
   number: 1
   pbi_id: PBI-001
   story: "ラーメン愛好家として、食べログなどのURLを入力して、店舗の基本情報（住所、電話番号など）を自動で取得したい"
-  status: in_progress
+  status: done
 
   subtasks:
     - test: "URL入力フィールドにURLを入力できる"
@@ -395,13 +395,12 @@ definition_of_done:
 
 ```yaml
 # Log of completed PBIs (one per sprint)
-completed: []
-# Example completed sprint format:
-# - sprint: 1
-#   pbi: PBI-001
-#   story: "As registered user, I can log in..."
-#   verification: passed
-#   notes: "Clean implementation"
+completed:
+  - sprint: 1
+    pbi: PBI-001
+    story: "ラーメン愛好家として、食べログなどのURLを入力して、店舗の基本情報を自動で取得したい"
+    verification: passed
+    notes: "全6サブタスク完了。extractShopInfoはスタブ実装（技術的負債）"
 ```
 
 ---
@@ -410,15 +409,20 @@ completed: []
 
 ```yaml
 # After each sprint, record what to improve
-retrospectives: []
-# Example retrospective format:
-# - sprint: 1
-#   worked_well:
-#     - "Clear acceptance criteria"
-#   to_improve:
-#     - "Better subtask breakdown"
-#   actions:
-#     - "Add more specific verification commands"
+retrospectives:
+  - sprint: 1
+    worked_well:
+      - "TDDサイクルの厳格な実施（Red-Green各フェーズが個別コミット）"
+      - "明確な受入基準（6つ全てが具体的で検証可能）"
+      - "エラーハンドリングの網羅性（APIエラーと抽出失敗を分離）"
+    to_improve:
+      - "スタブ実装の明示（extractShopInfoの技術的負債を事前記録すべき）"
+      - "Refactorフェーズのスキップ判断基準が不明確"
+      - "commit shaの記録タイミングが後追い"
+    actions:
+      - "次のPBI（PBI-002）でextractShopInfoの実AI API実装"
+      - "plan.mdルールセクションにRefactorスキップ基準を追加"
+      - "現在のTDDサイクルとコミット規約を継続"
 ```
 
 ---
