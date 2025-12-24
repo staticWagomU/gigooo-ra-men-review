@@ -27,13 +27,21 @@ export async function extractShopInfo(_markdown: string): Promise<ShopInfo> {
 export async function extractShopInfoWithAI(
   markdown: string,
 ): Promise<ShopInfo> {
-  const { object } = await generateObject({
-    model: openai("gpt-4o-mini"),
-    schema: shopInfoSchema,
-    prompt: `以下のMarkdownから店舗情報を抽出してください。
+  try {
+    const { object } = await generateObject({
+      model: openai("gpt-4o-mini"),
+      schema: shopInfoSchema,
+      prompt: `以下のMarkdownから店舗情報を抽出してください。
 
 ${markdown}`,
-  });
+    });
 
-  return object;
+    return object;
+  } catch {
+    return {
+      shopName: "",
+      address: "",
+      phoneNumber: "",
+    };
+  }
 }
