@@ -125,8 +125,8 @@ Sprint Cycle:
 sprint:
   number: 3
   pbi: PBI-003
-  status: in_progress
-  subtasks_completed: 0
+  status: done
+  subtasks_completed: 2
   subtasks_total: 2
   impediments: 0
 ```
@@ -229,7 +229,7 @@ product_backlog:
         verification: "! grep -q 'Fake it' lib/shop-info-extractor.ts"
     dependencies:
       - "PBI-002 (完了)"
-    status: ready
+    status: completed
 ```
 
 ### Definition of Ready
@@ -263,14 +263,19 @@ sprint:
     - test: "extractShopInfoがAI APIを呼び出して店舗情報を抽出できる（既存テストを更新）"
       implementation: "extractShopInfoWithAIをextractShopInfoにリネームし、スタブ実装を削除"
       type: structural
-      status: red
-      commits: []
+      status: completed
+      commits:
+        - phase: green
+          sha: 3ebeb49
+          message: "refactor(shop-info-extractor): スタブ実装をAI実装に統合"
+      note: "Refactorフェーズ不要（コードは既にクリーン）"
 
     - test: "review-form.tsxが正しくextractShopInfoを呼び出す"
       implementation: "review-form.tsxのインポートとコードが正しくAI実装を使用していることを確認"
       type: behavioral
-      status: pending
+      status: completed
       commits: []
+      note: "コード変更不要。スタブをAI実装に統合したことで自動的に完了。既存のauto-fill.test.tsxとfallback-manual-input.test.tsxで検証済み。"
 
   notes: |
     Sprint 3 開始。PBI-003「OpenAI APIを使って店舗情報を取得する」を実装。
@@ -346,6 +351,12 @@ completed:
     story: "ラーメン愛好家として、URLから取得したMarkdownをAI APIで解析し、実際の店舗情報を抽出したい"
     verification: passed
     notes: "全3サブタスク完了。Vercel AI SDK + OpenAI gpt-4o-miniで実装。Sprint 1の技術的負債を解消。"
+
+  - sprint: 3
+    pbi: PBI-003
+    story: "ラーメン愛好家として、レビューフォームでURL解析時にOpenAI APIを使って店舗情報を取得したい"
+    verification: passed
+    notes: "全2サブタスク完了。extractShopInfoWithAIをextractShopInfoに統合し、スタブ実装を削除。コードベースが統一された。"
 ```
 
 ---
@@ -383,6 +394,19 @@ retrospectives:
       - "テストファイル作成時はpnpm type-checkを即座に実行"
       - "コミット前にpnpm lintを習慣化"
       - "サブタスクの重複を計画時に精査する"
+
+  - sprint: 3
+    worked_well:
+      - "関数リネームによるシームレスな統合（利用側のコード変更が不要だった）"
+      - "重複テストファイルの統合でコードベースを簡潔化"
+      - "ADR-001でJina Reader採用の決定を記録"
+      - "DoD検証が全てパス（lint, type-check, build, test）"
+    to_improve:
+      - "Sprint 2でextractShopInfoWithAIを作成した時点でextractShopInfoのスタブ削除を検討すべきだった"
+      - "サブタスク2は実質的にコード変更不要（計画時に気づくべき）"
+    actions:
+      - "スタブ実装を作る際は、置き換えのPBIを同時に計画する"
+      - "サブタスク計画時に既存コードとの依存関係をより精査する"
 ```
 
 ---
