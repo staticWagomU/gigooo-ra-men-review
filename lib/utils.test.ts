@@ -112,13 +112,13 @@ describe("stripMarkdownLinks", () => {
 
   it("should remove plain URLs (http/https)", () => {
     const input = "Check https://example.com and http://test.com for details.";
-    const expected = "Check  and  for details.";
+    const expected = "Check and for details.";
     expect(stripMarkdownLinks(input)).toBe(expected);
   });
 
   it("should remove markdown image links ![alt](url)", () => {
     const input = "Here is an image: ![photo](https://example.com/img.jpg)";
-    const expected = "Here is an image: ";
+    const expected = "Here is an image:";
     expect(stripMarkdownLinks(input)).toBe(expected);
   });
 
@@ -134,5 +134,23 @@ describe("stripMarkdownLinks", () => {
     expect(result).toContain("麺屋 一燈");
     expect(result).toContain("公式サイト");
     expect(result).toContain("東京都新宿区");
+  });
+
+  it("should normalize consecutive blank lines to single blank line", () => {
+    const input = "Line 1\n\n\n\nLine 2\n\n\nLine 3";
+    const expected = "Line 1\n\nLine 2\n\nLine 3";
+    expect(stripMarkdownLinks(input)).toBe(expected);
+  });
+
+  it("should normalize consecutive spaces to single space", () => {
+    const input = "Word1    Word2   Word3";
+    const expected = "Word1 Word2 Word3";
+    expect(stripMarkdownLinks(input)).toBe(expected);
+  });
+
+  it("should trim trailing whitespace from lines", () => {
+    const input = "Line 1   \nLine 2  \nLine 3";
+    const expected = "Line 1\nLine 2\nLine 3";
+    expect(stripMarkdownLinks(input)).toBe(expected);
   });
 });
