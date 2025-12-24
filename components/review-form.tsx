@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
 import { safeParse } from "valibot";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { fetchJinaReader } from "@/lib/jina-reader";
+import { extractShopInfo } from "@/lib/shop-info-extractor";
 import { MessagePreview } from "@/components/ui/message-preview";
 import { StarRating } from "@/components/ui/star-rating";
 import { Textarea } from "@/components/ui/textarea";
@@ -60,6 +63,16 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
   // Get current form values for preview with subscription
   const formValues = useStore(form.store, (state) => state.values);
 
+  const handleParseUrl = async () => {
+    if (!urlInput) return;
+
+    const markdown = await fetchJinaReader(urlInput);
+    const shopInfo = await extractShopInfo(markdown);
+
+    form.setFieldValue("storeName", shopInfo.shopName);
+    form.setFieldValue("location", shopInfo.address);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold text-center">ラーメンレビュー</h1>
@@ -82,13 +95,18 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
               {/* URL解析 */}
               <div className="space-y-2">
                 <Label htmlFor="urlInput">URL解析</Label>
-                <Input
-                  id="urlInput"
-                  type="url"
-                  value={urlInput}
-                  onChange={(e) => setUrlInput(e.target.value)}
-                  placeholder="食べログなどのURLを入力"
-                />
+                <div className="flex gap-2">
+                  <Input
+                    id="urlInput"
+                    type="url"
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    placeholder="食べログなどのURLを入力"
+                  />
+                  <Button type="button" onClick={handleParseUrl}>
+                    解析
+                  </Button>
+                </div>
               </div>
 
               {/* Store Name */}
