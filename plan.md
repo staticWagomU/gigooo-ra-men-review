@@ -126,7 +126,7 @@ sprint:
   number: 1
   pbi: PBI-001
   status: in_progress
-  subtasks_completed: 3
+  subtasks_completed: 4
   subtasks_total: 6
   impediments: 0
 ```
@@ -250,8 +250,14 @@ sprint:
     - test: "解析された情報がレビューフォームに自動入力される"
       implementation: "URL解析後に店名、住所をフォームに自動入力する"
       type: behavioral
-      status: pending
-      commits: []
+      status: completed
+      commits:
+        - phase: red
+          sha: a2a96b1
+          message: "test: URL解析後のフォーム自動入力をテスト"
+        - phase: green
+          sha: f8f55b0
+          message: "feat: URL解析による店舗情報の自動入力を実装"
 
     - test: "Jina Reader API がエラーを返した場合はエラーメッセージが表示される"
       implementation: "APIエラー時にユーザーフレンドリーなエラーメッセージを表示する"
