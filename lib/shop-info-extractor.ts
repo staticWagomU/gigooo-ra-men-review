@@ -8,6 +8,12 @@ export type ShopInfo = {
   phoneNumber: string;
 };
 
+export const emptyShopInfo: ShopInfo = {
+  shopName: "",
+  address: "",
+  phoneNumber: "",
+};
+
 const shopInfoSchema = z.object({
   shopName: z.string(),
   address: z.string(),
@@ -38,10 +44,6 @@ ${markdown}`,
 
     return object;
   } catch {
-    return {
-      shopName: "",
-      address: "",
-      phoneNumber: "",
-    };
+    return emptyShopInfo;
   }
 }

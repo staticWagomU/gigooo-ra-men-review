@@ -6,7 +6,7 @@ vi.mock("ai", () => ({
 }));
 
 import { generateObject } from "ai";
-import { extractShopInfoWithAI } from "@/lib/shop-info-extractor";
+import { extractShopInfoWithAI, emptyShopInfo } from "@/lib/shop-info-extractor";
 
 describe("extractShopInfoWithAI", () => {
   it("should call AI API and extract shop info from markdown", async () => {
@@ -43,10 +43,6 @@ describe("extractShopInfoWithAI", () => {
 
     const result = await extractShopInfoWithAI(markdown);
 
-    expect(result).toEqual({
-      shopName: "",
-      address: "",
-      phoneNumber: "",
-    });
+    expect(result).toEqual(emptyShopInfo);
   });
 });
