@@ -8,12 +8,12 @@ vi.mock("@/lib/jina-reader", () => ({
   fetchJinaReader: vi.fn(),
 }));
 
-vi.mock("@/lib/shop-info-extractor", () => ({
-  extractShopInfo: vi.fn(),
+vi.mock("@/lib/actions", () => ({
+  parseUrlAndExtractShopInfo: vi.fn(),
 }));
 
+import { parseUrlAndExtractShopInfo } from "@/lib/actions";
 import { fetchJinaReader } from "@/lib/jina-reader";
-import { extractShopInfo } from "@/lib/shop-info-extractor";
 
 describe("AI抽出失敗時の手動入力フォールバック", () => {
   it("should show manual input message when AI fails to extract shop info", async () => {
@@ -22,7 +22,7 @@ describe("AI抽出失敗時の手動入力フォールバック", () => {
     // Jina ReaderはMarkdownを正常に取得
     vi.mocked(fetchJinaReader).mockResolvedValue("# Some page content");
     // AIは店舗情報を抽出できない（空のオブジェクトを返す）
-    vi.mocked(extractShopInfo).mockResolvedValue({});
+    vi.mocked(parseUrlAndExtractShopInfo).mockResolvedValue({});
 
     render(<ReviewForm />);
 

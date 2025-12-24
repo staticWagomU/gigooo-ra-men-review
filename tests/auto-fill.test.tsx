@@ -8,12 +8,12 @@ vi.mock("@/lib/jina-reader", () => ({
   fetchJinaReader: vi.fn(),
 }));
 
-vi.mock("@/lib/shop-info-extractor", () => ({
-  extractShopInfo: vi.fn(),
+vi.mock("@/lib/actions", () => ({
+  parseUrlAndExtractShopInfo: vi.fn(),
 }));
 
+import { parseUrlAndExtractShopInfo } from "@/lib/actions";
 import { fetchJinaReader } from "@/lib/jina-reader";
-import { extractShopInfo } from "@/lib/shop-info-extractor";
 
 describe("URL解析による自動入力", () => {
   it("should auto-fill store name and location after URL parsing", async () => {
@@ -21,7 +21,7 @@ describe("URL解析による自動入力", () => {
 
     // モックの戻り値を設定
     vi.mocked(fetchJinaReader).mockResolvedValue("# 麺屋 一燈\n東京都新宿区");
-    vi.mocked(extractShopInfo).mockResolvedValue({
+    vi.mocked(parseUrlAndExtractShopInfo).mockResolvedValue({
       shopName: "麺屋 一燈",
       address: "東京都新宿区西新宿1-2-3",
     });

@@ -14,7 +14,7 @@ export const emptyShopInfo: ShopInfo = {};
 export async function extractShopInfo(markdown: string): Promise<ShopInfo> {
   try {
     const result = await generateText({
-      model: openai("gpt-4.1-mini"),
+      model: openai("gpt-5-mini"),
       output: Output.object({ schema: shopInfoSchema }),
       prompt: `以下のMarkdownから店舗情報を抽出してください。
 

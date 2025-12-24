@@ -10,9 +10,8 @@ import { Label } from "@/components/ui/label";
 import { MessagePreview } from "@/components/ui/message-preview";
 import { StarRating } from "@/components/ui/star-rating";
 import { Textarea } from "@/components/ui/textarea";
+import { parseUrlAndExtractShopInfo } from "@/lib/actions";
 import { fetchJinaReader } from "@/lib/jina-reader";
-import { extractShopInfo } from "@/lib/shop-info-extractor";
-import { stripMarkdownLinks } from "@/lib/utils";
 import { type ReviewFormData, reviewFormSchema } from "@/lib/validations";
 
 interface ReviewFormProps {
@@ -76,8 +75,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
 
     try {
       const markdown = await fetchJinaReader(urlInput);
-      const cleanedMarkdown = stripMarkdownLinks(markdown);
-      const shopInfo = await extractShopInfo(cleanedMarkdown);
+      const shopInfo = await parseUrlAndExtractShopInfo(markdown);
 
       if (!shopInfo.shopName) {
         setFallbackMessage(
