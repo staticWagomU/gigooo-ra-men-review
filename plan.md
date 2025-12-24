@@ -123,11 +123,11 @@ Sprint Cycle:
 
 ```yaml
 sprint:
-  number: 2
-  pbi: PBI-002
-  status: done
-  subtasks_completed: 3
-  subtasks_total: 3
+  number: 3
+  pbi: PBI-003
+  status: in_progress
+  subtasks_completed: 0
+  subtasks_total: 2
   impediments: 0
 ```
 
@@ -206,6 +206,30 @@ product_backlog:
     dependencies:
       - "PBI-001 (完了)"
     status: completed
+
+  - id: PBI-003
+    story:
+      role: "ラーメン愛好家"
+      capability: "レビューフォームでURL解析時にOpenAI APIを使って店舗情報を取得する"
+      benefit: "スタブ実装ではなく、実際のAI APIで正確な店舗情報を自動取得できる"
+    technical_approach:
+      summary: |
+        1. extractShopInfoWithAI を extractShopInfo に統合（リネーム）
+        2. review-form.tsx のインポートを更新
+        3. 既存テストを更新して新しい関数名に対応
+        4. スタブ実装を削除
+      dependencies:
+        - "PBI-002 (完了)"
+    acceptance_criteria:
+      - criterion: "extractShopInfoがAI APIを呼び出して店舗情報を抽出できる"
+        verification: "pnpm test -- --run tests/shop-info-extractor.test.ts"
+      - criterion: "review-form.tsxがAI実装のextractShopInfoを使用している"
+        verification: "grep -q 'extractShopInfoWithAI\\|extractShopInfo' components/review-form.tsx"
+      - criterion: "スタブ実装が削除されている"
+        verification: "! grep -q 'Fake it' lib/shop-info-extractor.ts"
+    dependencies:
+      - "PBI-002 (完了)"
+    status: ready
 ```
 
 ### Definition of Ready
@@ -230,106 +254,28 @@ definition_of_ready:
 
 ```yaml
 sprint:
-  number: 2
-  pbi_id: PBI-002
-  story: "ラーメン愛好家として、URLから取得したMarkdownをAI APIで解析し、実際の店舗情報を抽出したい"
+  number: 3
+  pbi_id: PBI-003
+  story: "ラーメン愛好家として、レビューフォームでURL解析時にOpenAI APIを使って店舗情報を取得したい"
   status: in_progress
 
   subtasks:
-    - test: "extractShopInfoがAI APIを呼び出して店舗情報を抽出できる"
-      implementation: "extractShopInfo関数をAI API呼び出しに置き換え、Markdownから店舗情報JSONを抽出する"
-      type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: 4ee5eed
-          message: "test: AI API呼び出しで店舗情報を抽出するテスト"
-        - phase: green
-          sha: e169003
-          message: "feat: Vercel AI SDKでAIによる店舗情報抽出を実装"
-
-    - test: "AI APIのレスポンスがShopInfo型に正しくパースされる"
-      implementation: "AIレスポンスをバリデーションしてShopInfo型に変換する関数を実装"
-      type: behavioral
-      status: completed
+    - test: "extractShopInfoがAI APIを呼び出して店舗情報を抽出できる（既存テストを更新）"
+      implementation: "extractShopInfoWithAIをextractShopInfoにリネームし、スタブ実装を削除"
+      type: structural
+      status: red
       commits: []
-      note: "サブタスク1でgenerateObject + Zodスキーマにより既に実装済み。スキップ。"
 
-    - test: "AI APIがエラーを返した場合は空のShopInfoを返す"
-      implementation: "API呼び出し失敗時にフォールバックとして空のShopInfoを返すエラーハンドリング"
+    - test: "review-form.tsxが正しくextractShopInfoを呼び出す"
+      implementation: "review-form.tsxのインポートとコードが正しくAI実装を使用していることを確認"
       type: behavioral
-      status: completed
-      commits:
-        - phase: red
-          sha: 5682d20
-          message: "test: AI APIエラー時のフォールバック動作を検証"
-        - phase: green
-          sha: 79cf7a7
-          message: "feat: AI APIエラー時に空のShopInfoを返すフォールバック処理"
-        - phase: refactor
-          sha: 4abbff1
-          message: "refactor: 空のShopInfoオブジェクトを定数化"
+      status: pending
+      commits: []
 
   notes: |
-    Sprint 2 開始。PBI-002「AI APIで店舗情報を抽出する」を実装。
-    Sprint 1でスタブ実装したextractShopInfoを実際のAI API呼び出しに置き換える。
-    TDDでRed-Green-Refactorサイクルを回す。
-
-  # TDD Subtask Format - Each subtask tracks commits through Red-Green-Refactor:
-  #
-  # - test: "User model has email and hashed_password fields"
-  #   implementation: "Create User SQLAlchemy model with fields"
-  #   type: behavioral  # behavioral | structural
-  #   status: completed  # pending | red | green | refactoring | completed
-  #   commits:
-  #     - phase: red
-  #       message: "test: User model has email and hashed_password fields"
-  #     - phase: green
-  #       message: "feat: Create User SQLAlchemy model"
-  #     - phase: refactor
-  #       message: "refactor: Extract field definitions to constants"
-  #     - phase: refactor
-  #       message: "refactor: Add docstring to User model"
-  #
-  # - test: "hash_password returns bcrypt hash"
-  #   implementation: "Implement hash_password utility function"
-  #   type: behavioral
-  #   status: green  # Test passing, no refactor needed yet
-  #   commits:
-  #     - phase: red
-  #       message: "test: hash_password returns bcrypt hash"
-  #     - phase: green
-  #       message: "feat: Implement hash_password utility"
-  #
-  # - test: "verify_password returns True for matching passwords"
-  #   implementation: "Implement verify_password utility function"
-  #   type: behavioral
-  #   status: red  # Failing test committed, implementation pending
-  #   commits:
-  #     - phase: red
-  #       message: "test: verify_password returns True for matching"
-  #
-  # - test: "Extract password validation to separate module"
-  #   implementation: "Move validation logic to validators.py"
-  #   type: structural  # Refactoring - no new behavior, no red phase
-  #   status: pending
-  #   commits: []
-  #
-  # Status meanings:
-  #   pending    -> Not started, no commits yet
-  #   red        -> Failing test committed, ready for implementation
-  #   green      -> Passing implementation committed, ready for refactoring
-  #   refactoring -> One or more refactor commits done, more may come
-  #   completed  -> All commits done, subtask finished
-  #
-  # Commit tracking:
-  #   - Each TDD phase produces exactly one commit (except refactoring which may have many)
-  #   - phase: red | green | refactor
-  #   - message: The actual commit message used
-  #   - Multiple refactor commits are encouraged (Tidy First = small structural changes)
-
-  notes: |
-    Sprint 1 開始。PBI-001「URL から店舗情報自動取得」を実装。
+    Sprint 3 開始。PBI-003「OpenAI APIを使って店舗情報を取得する」を実装。
+    Sprint 2で作成したextractShopInfoWithAIをextractShopInfoに統合し、
+    スタブ実装を削除してコードベースを統一する。
     TDDでRed-Green-Refactorサイクルを回す。
 ```
 
