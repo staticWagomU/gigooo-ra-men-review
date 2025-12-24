@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatStars, generateSlackMessage } from "./utils";
+import { formatStars, generateSlackMessage, stripMarkdownLinks } from "./utils";
 
 describe("formatStars", () => {
   it("should return 1 filled star and 4 empty stars for rating 1", () => {
@@ -100,5 +100,39 @@ describe("generateSlackMessage", () => {
 E`;
 
     expect(generateSlackMessage(formData)).toBe(expected);
+  });
+});
+
+describe("stripMarkdownLinks", () => {
+  it("should remove markdown links [text](url) and keep the text", () => {
+    const input = "Visit [our site](https://example.com) for more info.";
+    const expected = "Visit our site for more info.";
+    expect(stripMarkdownLinks(input)).toBe(expected);
+  });
+
+  it("should remove plain URLs (http/https)", () => {
+    const input = "Check https://example.com and http://test.com for details.";
+    const expected = "Check  and  for details.";
+    expect(stripMarkdownLinks(input)).toBe(expected);
+  });
+
+  it("should remove markdown image links ![alt](url)", () => {
+    const input = "Here is an image: ![photo](https://example.com/img.jpg)";
+    const expected = "Here is an image: ";
+    expect(stripMarkdownLinks(input)).toBe(expected);
+  });
+
+  it("should handle combined markdown and plain URLs", () => {
+    const input = `
+# 麺屋 一燈
+[公式サイト](https://example.com)
+住所: 東京都新宿区
+詳細: https://tabelog.com/tokyo/123
+`;
+    const result = stripMarkdownLinks(input);
+    expect(result).not.toContain("https://");
+    expect(result).toContain("麺屋 一燈");
+    expect(result).toContain("公式サイト");
+    expect(result).toContain("東京都新宿区");
   });
 });
