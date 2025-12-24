@@ -12,6 +12,7 @@ import { StarRating } from "@/components/ui/star-rating";
 import { Textarea } from "@/components/ui/textarea";
 import { fetchJinaReader } from "@/lib/jina-reader";
 import { extractShopInfo } from "@/lib/shop-info-extractor";
+import { stripMarkdownLinks } from "@/lib/utils";
 import { type ReviewFormData, reviewFormSchema } from "@/lib/validations";
 
 interface ReviewFormProps {
@@ -75,7 +76,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
 
     try {
       const markdown = await fetchJinaReader(urlInput);
-      const shopInfo = await extractShopInfo(markdown);
+      const cleanedMarkdown = stripMarkdownLinks(markdown);
+      const shopInfo = await extractShopInfo(cleanedMarkdown);
 
       if (!shopInfo.shopName) {
         setFallbackMessage(
