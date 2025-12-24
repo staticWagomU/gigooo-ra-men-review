@@ -21,14 +21,17 @@ describe("AI抽出失敗時の手動入力フォールバック", () => {
 
     // Jina ReaderはMarkdownを正常に取得
     vi.mocked(fetchJinaReader).mockResolvedValue("# Some page content");
-    // AIは店舗情報を抽出できない（空のオブジェクトを返す）
-    vi.mocked(parseUrlAndExtractShopInfo).mockResolvedValue({});
+    // AIは店舗情報を抽出できない（null値を返す）
+    vi.mocked(parseUrlAndExtractShopInfo).mockResolvedValue({
+      shopName: null,
+      address: null,
+    });
 
     render(<ReviewForm />);
 
-    // URL入力
-    const urlInput = screen.getByLabelText("URL解析");
-    await user.type(urlInput, "https://example.com/unknown-page");
+    // 店舗リンク入力
+    const storeLinkInput = screen.getByLabelText("店舗リンク");
+    await user.type(storeLinkInput, "https://example.com/unknown-page");
 
     // 解析ボタンをクリック
     const parseButton = screen.getByRole("button", { name: "解析" });

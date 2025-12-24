@@ -25,9 +25,9 @@ describe("Jina Reader APIエラーハンドリング", () => {
 
     render(<ReviewForm />);
 
-    // URL入力
-    const urlInput = screen.getByLabelText("URL解析");
-    await user.type(urlInput, "https://tabelog.com/example");
+    // 店舗リンク入力
+    const storeLinkInput = screen.getByLabelText("店舗リンク");
+    await user.type(storeLinkInput, "https://tabelog.com/example");
 
     // 解析ボタンをクリック
     const parseButton = screen.getByRole("button", { name: "解析" });

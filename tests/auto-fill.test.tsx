@@ -15,7 +15,7 @@ vi.mock("@/lib/actions", () => ({
 import { parseUrlAndExtractShopInfo } from "@/lib/actions";
 import { fetchJinaReader } from "@/lib/jina-reader";
 
-describe("URL解析による自動入力", () => {
+describe("店舗リンク解析による自動入力", () => {
   it("should auto-fill store name and location after URL parsing", async () => {
     const user = userEvent.setup();
 
@@ -28,9 +28,9 @@ describe("URL解析による自動入力", () => {
 
     render(<ReviewForm />);
 
-    // URL入力
-    const urlInput = screen.getByLabelText("URL解析");
-    await user.type(urlInput, "https://tabelog.com/example");
+    // 店舗リンク入力
+    const storeLinkInput = screen.getByLabelText("店舗リンク");
+    await user.type(storeLinkInput, "https://tabelog.com/example");
 
     // 解析ボタンをクリック
     const parseButton = screen.getByRole("button", { name: "解析" });
