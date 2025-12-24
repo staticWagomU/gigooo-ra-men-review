@@ -125,8 +125,8 @@ Sprint Cycle:
 sprint:
   number: 2
   pbi: PBI-002
-  status: in_progress
-  subtasks_completed: 2
+  status: done
+  subtasks_completed: 3
   subtasks_total: 3
   impediments: 0
 ```
@@ -205,7 +205,7 @@ product_backlog:
         verification: "pnpm test -- --run tests/shop-info-extractor-error.test.ts"
     dependencies:
       - "PBI-001 (完了)"
-    status: ready
+    status: completed
 ```
 
 ### Definition of Ready
@@ -258,7 +258,7 @@ sprint:
     - test: "AI APIがエラーを返した場合は空のShopInfoを返す"
       implementation: "API呼び出し失敗時にフォールバックとして空のShopInfoを返すエラーハンドリング"
       type: behavioral
-      status: green
+      status: completed
       commits:
         - phase: red
           sha: 5682d20
@@ -266,6 +266,9 @@ sprint:
         - phase: green
           sha: 79cf7a7
           message: "feat: AI APIエラー時に空のShopInfoを返すフォールバック処理"
+        - phase: refactor
+          sha: 4abbff1
+          message: "refactor: 空のShopInfoオブジェクトを定数化"
 
   notes: |
     Sprint 2 開始。PBI-002「AI APIで店舗情報を抽出する」を実装。
@@ -391,6 +394,12 @@ completed:
     story: "ラーメン愛好家として、食べログなどのURLを入力して、店舗の基本情報を自動で取得したい"
     verification: passed
     notes: "全6サブタスク完了。extractShopInfoはスタブ実装（技術的負債）"
+
+  - sprint: 2
+    pbi: PBI-002
+    story: "ラーメン愛好家として、URLから取得したMarkdownをAI APIで解析し、実際の店舗情報を抽出したい"
+    verification: passed
+    notes: "全3サブタスク完了。Vercel AI SDK + OpenAI gpt-4o-miniで実装。Sprint 1の技術的負債を解消。"
 ```
 
 ---
@@ -413,6 +422,21 @@ retrospectives:
       - "次のPBI（PBI-002）でextractShopInfoの実AI API実装"
       - "plan.mdルールセクションにRefactorスキップ基準を追加"
       - "現在のTDDサイクルとコミット規約を継続"
+
+  - sprint: 2
+    worked_well:
+      - "Vercel AI SDKのgenerateObject + Zodスキーマで型安全なAI出力を実現"
+      - "Refactorフェーズでの重複除去（emptyShopInfo定数化）"
+      - "Sprint 1のアクションアイテム「AI API実装」を完了"
+      - "DoD検証で問題を早期発見・修正（lint, type-check）"
+    to_improve:
+      - "テストのモック型が不完全だった（type-checkで発見）"
+      - "Biome formatとimport orderを事前に確認すべき"
+      - "サブタスク2は実質スキップ（サブタスク1で既に実装済み）"
+    actions:
+      - "テストファイル作成時はpnpm type-checkを即座に実行"
+      - "コミット前にpnpm lintを習慣化"
+      - "サブタスクの重複を計画時に精査する"
 ```
 
 ---
