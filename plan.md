@@ -126,7 +126,7 @@ sprint:
   number: 2
   pbi: PBI-002
   status: in_progress
-  subtasks_completed: 1
+  subtasks_completed: 2
   subtasks_total: 3
   impediments: 0
 ```
@@ -251,13 +251,14 @@ sprint:
     - test: "AI APIのレスポンスがShopInfo型に正しくパースされる"
       implementation: "AIレスポンスをバリデーションしてShopInfo型に変換する関数を実装"
       type: behavioral
-      status: pending
+      status: completed
       commits: []
+      note: "サブタスク1でgenerateObject + Zodスキーマにより既に実装済み。スキップ。"
 
     - test: "AI APIがエラーを返した場合は空のShopInfoを返す"
       implementation: "API呼び出し失敗時にフォールバックとして空のShopInfoを返すエラーハンドリング"
       type: behavioral
-      status: pending
+      status: red
       commits: []
 
   notes: |
