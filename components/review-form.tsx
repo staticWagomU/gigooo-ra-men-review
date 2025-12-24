@@ -21,6 +21,7 @@ interface ReviewFormProps {
 function ReviewForm({ onSubmit }: ReviewFormProps) {
   const [urlInput, setUrlInput] = useState("");
   const [urlError, setUrlError] = useState<string | null>(null);
+  const [fallbackMessage, setFallbackMessage] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
@@ -68,10 +69,18 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
     if (!urlInput) return;
 
     setUrlError(null);
+    setFallbackMessage(null);
 
     try {
       const markdown = await fetchJinaReader(urlInput);
       const shopInfo = await extractShopInfo(markdown);
+
+      if (!shopInfo.shopName) {
+        setFallbackMessage(
+          "店舗情報を自動取得できませんでした。手動で入力してください。",
+        );
+        return;
+      }
 
       form.setFieldValue("storeName", shopInfo.shopName);
       form.setFieldValue("location", shopInfo.address);
@@ -116,6 +125,11 @@ function ReviewForm({ onSubmit }: ReviewFormProps) {
                 </div>
                 {urlError && (
                   <p className="text-sm text-destructive">{urlError}</p>
+                )}
+                {fallbackMessage && (
+                  <p className="text-sm text-muted-foreground">
+                    {fallbackMessage}
+                  </p>
                 )}
               </div>
 
